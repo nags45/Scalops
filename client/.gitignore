@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Build output (for Vite or CRA)
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Testing coverage
+coverage/
+
+# Cache
+.cache/
