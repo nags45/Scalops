@@ -10,8 +10,14 @@ router.get('/google', (req, res) => {
 
 router.get('/google/callback', 
   passport.authenticate('google', { session: false }), (req, res) => {
+    // user object is now { id, email, provider, name, googleId }
     const user = req.user;
-    const token = generateToken(user);
+    // Defensive: if user is wrapped in { user: ... }
+    const userData = user && user.id ? user : (user && user.user ? user.user : null);
+    if (!userData) {
+      return res.redirect('http://localhost:3000/login?error=google_auth_failed');
+    }
+    const token = generateToken(userData);
     res.redirect(`http://localhost:3000/google/callback?token=${token}`);
   }
 );

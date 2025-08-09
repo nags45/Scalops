@@ -14,7 +14,7 @@ passport.use(new GoogleStrategy({
       const findResponse = await axios.post('http://localhost:5001/api/user/google/find', {
         googleId: profile.id
       });
-      let user = findResponse.data;
+      let user = findResponse.data && findResponse.data.user ? findResponse.data.user : null;
       if (!user) {
         // Create user in user-service
         const createResponse = await axios.post('http://localhost:5001/api/user/google/create', {
@@ -23,7 +23,7 @@ passport.use(new GoogleStrategy({
           email: profile.emails && profile.emails[0] ? profile.emails[0].value : undefined,
           provider: 'google'
         });
-        user = createResponse.data;
+        user = createResponse.data && createResponse.data.user ? createResponse.data.user : null;
       }
       return done(null, user);
     } catch (error) {
