@@ -1,8 +1,7 @@
 import React from 'react';
 import {useState} from 'react';
 import axios from 'axios';
-import { IoMail, IoLockClosedSharp } from 'react-icons/io5';
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { IoMail, IoLockClosedSharp, IoEyeOffOutline, IoEyeOutline, IoPerson } from 'react-icons/io5';
 import bgImage from '../assets/loginbackground.jpg';
 import microsoft from '../assets/microsoft.svg';
 import google from '../assets/google.svg';
@@ -16,6 +15,7 @@ const RegisterForm = () => {
     const [errors, setErrors] = useState({});
     const [email, setEmail] = useState("");
     const [serverError, setServerError] = useState("");
+    const [name, setName] = useState("");
 
     const handleEmailChange = (e) => {
         const email = e.target.value;
@@ -34,6 +34,22 @@ const RegisterForm = () => {
             setErrors((prev) => ({
                 ...prev,
                 email: null,
+            }));
+        }
+    }
+
+    const handleNameChange = (e) => {
+        const name = e.target.value;
+        setName(name);
+        if (!name) {
+            setErrors((prev) => ({
+                ...prev,
+                name: "Name is required",
+            }));
+        } else {
+            setErrors((prev) => ({
+                ...prev,
+                name: null,
             }));
         }
     }
@@ -72,7 +88,7 @@ const RegisterForm = () => {
         e.preventDefault();
         setServerError("");
         try {
-            const response = await axios.post('/api/auth/register', { email, password });
+            const response = await axios.post('/api/auth/register', { email, password, name });
             localStorage.setItem('token', response.data.token);
             Navigate('/home'); // Redirect to home page
         } catch (error) {
@@ -108,6 +124,18 @@ const RegisterForm = () => {
                         />
                     </div>
                     {errors.email && <span className="text-red-500 text-sm mb-4">{errors.email}</span>}
+
+                    {/* Name */}
+                    <div className="flex items-center gap-2 bg-white text-black rounded px-3 py-2 mt-4">
+                        <IoPerson />
+                        <input
+                            type="text"
+                            placeholder="Name"
+                            onChange={handleNameChange}
+                            className="w-full outline-none bg-transparent focus:placeholder-transparent"
+                        />
+                    </div>
+                    {errors.name && <span className="text-red-500 text-sm mb-4">{errors.name}</span>}
 
                     {/* Password */}
                     <div className="flex items-center gap-2 bg-white text-black rounded px-3 py-2 mt-4">
@@ -167,7 +195,7 @@ const RegisterForm = () => {
 
                     {/* OAuth Buttons */}
                     <div className="mt-6 flex flex-col gap-2 text-sm">
-                        <a href="/auth/google" className="w-full py-3 border border-white/10 bg-purple-300/25 hover:bg-purple-300/15 rounded flex items-center justify-center gap-2">
+                        <a href="/api/auth/google" className="w-full py-3 border border-white/10 bg-purple-300/25 hover:bg-purple-300/15 rounded flex items-center justify-center gap-2">
                             <img
                                 src={google}
                                 alt="Google"

@@ -1,12 +1,12 @@
 import React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import axios from 'axios';
 import { IoMail, IoLockClosedSharp } from 'react-icons/io5';
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import bgImage from '../assets/loginbackground.jpg';
 import microsoft from '../assets/microsoft.svg';
 import google from '../assets/google.svg';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -15,6 +15,13 @@ const LoginForm = () => {
     const [errors, setErrors] = useState({});
     const [email, setEmail] = useState("");
     const [serverError, setServerError] = useState("");
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+        navigate('/home');
+        }
+    }, [navigate]);
 
     const handleEmailChange = (e) => {
         const email = e.target.value;
@@ -141,7 +148,7 @@ const LoginForm = () => {
 
                     {/* OAuth Buttons */}
                     <div className="mt-6 flex flex-col gap-2 text-sm">
-                        <a href="/auth/google" className="w-full py-3 border border-white/10 bg-purple-300/25 hover:bg-purple-300/15 rounded flex items-center justify-center gap-2">
+                        <a href="/api/auth/google" className="w-full py-3 border border-white/10 bg-purple-300/25 hover:bg-purple-300/15 rounded flex items-center justify-center gap-2">
                             <img
                                 src={google}
                                 alt="Google"

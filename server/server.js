@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const generateToken = require('./utils/jwt');
 const authenticateJWT = require('./middleware/jwtAuth');
 const passport = require('passport');
 const path = require('path');
@@ -8,7 +7,7 @@ const app = express();
 require('dotenv').config();
 const sequelize = require('./db/sequelize');
 require('./auth/gauth');
-const authRoutes = require('./localAuth');
+const authRoutes = require('./routers/auth');
 
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:3001'],
@@ -18,20 +17,8 @@ app.use(cors({
 app.use(express.json());
 app.use(passport.initialize());
 
-app.use('/api', authRoutes);
+app.use('/api/auth', authRoutes);
 
-app.get('/auth/google', 
-  passport.authenticate('google', { scope: ['email', 'profile'] })
-);
-
-app.get('/google/callback', 
-  passport.authenticate('google', { session: false }),
-  (req, res) => {
-    const user = req.user;
-    const token = generateToken(user);
-    res.redirect(`http://localhost:3000/google/callback?token=${token}`);
-  }
-);
 
 app.get('/api/user', authenticateJWT, async (req, res) => {
   try {
