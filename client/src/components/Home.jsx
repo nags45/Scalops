@@ -14,7 +14,7 @@ const Home = () => {
       navigate('/login');
       return;
     }
-    
+
     axios.get('/api/user', {
       headers: { Authorization: `Bearer ${token}` }
     })
