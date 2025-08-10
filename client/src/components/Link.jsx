@@ -7,6 +7,9 @@ const Link = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
+  const [accessKeyId, setAccessKeyId] = useState("");
+  const [secretAccessKey, setSecretAccessKey] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -32,18 +35,27 @@ const Link = () => {
       });
   }, [navigate]);
 
-  const handleLink = () => {
+  const handleLink = (e) => {
+    e.preventDefault();
+    setError("");
     const token = localStorage.getItem("token");
-    const accessKeyId = document.getElementById("accessKeyId").value;
-    const secretAccessKey = document.getElementById("secretAccessKey").value;
-
     axios
-      .post("/api/auth/link", { token, accessKeyId, secretAccessKey })
+      .post(
+        "/api/auth/link",
+        { accessKeyId, secretAccessKey },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then((res) => {
+        setError("");
         console.log("Successfully linked AWS account:", res.data);
       })
       .catch((err) => {
-        console.error("Error linking AWS account:", err);
+        let msg = "Error linking AWS account.";
+        if (err.response?.data?.error) {
+          msg = err.response.data.error;
+        }
+        setError(msg);
+        console.error(msg, err);
       });
   };
   const handleLogout = () => {
@@ -93,11 +105,18 @@ const Link = () => {
                   Link your AWS Account
                 </h3>
                 <div className="space-y-2 text-white/90">
+                  {error && (
+                    <div className="mb-3 text-red-400 font-semibold text-center">
+                      {error}
+                    </div>
+                  )}
                   <form onSubmit={handleLink}>
                     <div className="flex items-center gap-2 bg-white text-black rounded px-3 py-2 mb-5">
                       <input
                         type="text"
                         placeholder="Access Key ID"
+                        value={accessKeyId}
+                        onChange={(e) => setAccessKeyId(e.target.value)}
                         className="w-full outline-none bg-transparent focus:placeholder-transparent"
                       />
                     </div>
@@ -105,6 +124,8 @@ const Link = () => {
                       <input
                         type="text"
                         placeholder="Secret Access Key"
+                        value={secretAccessKey}
+                        onChange={(e) => setSecretAccessKey(e.target.value)}
                         className="w-full outline-none bg-transparent focus:placeholder-transparent"
                       />
                     </div>

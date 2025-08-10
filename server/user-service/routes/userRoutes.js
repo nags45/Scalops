@@ -2,14 +2,11 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/user");
 const axios = require("axios");
+const authenticateJWT = require("../../shared/middleware/jwtAuth");
 
-router.get("/profile", async (req, res) => {
+router.get("/profile", authenticateJWT, async (req, res) => {
   try {
-    // Forward the token to auth-service for validation
-    const response = await axios.get("http://localhost:5000/api/auth/", {
-      headers: { Authorization: req.headers.authorization },
-    });
-    const userId = response.data.userId;
+    const userId = req.userId;
     // Now use userId to fetch user profile
     const user = await User.findOne({ where: { id: userId } });
     res.json(user);
@@ -18,13 +15,8 @@ router.get("/profile", async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateJWT, async (req, res) => {
   try {
-    // Forward the token to auth-service for validation
-    const response = await axios.get("http://localhost:5000/api/auth/", {
-      headers: { Authorization: req.headers.authorization },
-    });
-    const userId = response.data.userId;
     // Now use userId to fetch user profile
     const user = await User.findOne({ where: { id: userId } });
     res.json({ user }); // <-- wrap user in an object

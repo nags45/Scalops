@@ -38,6 +38,56 @@ router.post("/validate", async (req, res) => {
   return res.json({ user: { id, email: userEmail, provider, name, googleId } });
 });
 
+// Link accounts
+router.post("/link", async (req, res) => {
+  const { userId, accessKeyId, secretAccessKey } = req.body;
+  // Validate AWS credentials are not empty
+  if (
+    !accessKeyId ||
+    !secretAccessKey ||
+    accessKeyId.trim() === "" ||
+    secretAccessKey.trim() === ""
+  ) {
+    return res
+      .status(400)
+      .json({
+        error: "AWS Access Key ID and Secret Access Key must not be empty.",
+      });
+  }
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    user.accessKeyId = accessKeyId;
+    user.secretAccessKey = secretAccessKey;
+    await user.save();
+    const {
+      id,
+      email,
+      provider,
+      name,
+      googleId,
+      accessKeyId: keyId,
+      secretAccessKey: secretKey,
+    } = user;
+    res.json({
+      user: {
+        id,
+        email,
+        provider,
+        name,
+        googleId,
+        accessKeyId: keyId,
+        secretAccessKey: secretKey,
+      },
+    });
+  } catch (error) {
+    console.error("Error linking account:", error);
+    res.status(500).json({ error: "Failed to link account" });
+  }
+});
+
 // Google user lookup
 router.post("/google/find", async (req, res) => {
   const { googleId } = req.body;

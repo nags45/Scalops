@@ -33,6 +33,14 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: "local",
     },
+    accessKeyId: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    secretAccessKey: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,

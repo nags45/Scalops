@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 5000;
 const localAuthRoutes = require("./routes/localAuth");
 const googleAuthRoutes = require("./routes/googleOAuth");
 const jwtAuthRoutes = require("./routes/jwtAuth");
+const connect = require("./routes/connectAWS");
 require("./strategies/googleOAuthStrategy");
 
 const app = express();
@@ -30,6 +31,9 @@ app.use("/api/auth", googleAuthRoutes);
 
 // JWT validation route: /api/auth/
 app.use("/api/auth", jwtAuthRoutes);
+
+// Connect AWS account route: /api/auth/link
+app.use("/api/auth", connect);
 
 app.get("/api/auth/health", (req, res) => {
   res.json({ status: "Auth service running" });
