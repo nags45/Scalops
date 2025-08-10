@@ -1,9 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const authenticateJWT = require('../middleware/jwtAuth');
+const authenticateJWT = require("../middleware/jwtAuth");
 
-router.get('/', authenticateJWT, (req, res) => {
-  res.json({ success: true, userId: req.user.id });
+router.get("/", authenticateJWT, (req, res) => {
+  res.json({ success: true, user: req.user });
 });
 
 module.exports = router;

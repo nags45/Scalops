@@ -2,12 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-    "main": "authService.js",
-    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1",
-      "start": "node authService.js",
-      "dev": "nodemon authService.js",
-      "lint": "eslint ."
+  "main": "authService.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node authService.js",
+    "dev": "nodemon authService.js",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",

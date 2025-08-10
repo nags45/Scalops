@@ -1,84 +1,36 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import bgImage from '../assets/loginbackground.jpg';
+import bgImage from "../assets/loginbackground.jpg";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
-    axios.get('/api/user', {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(res => {
-      setUser(res.data.user);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error('Error fetching user:', err);
-      if (err.response?.status === 401 || err.response?.status === 403) {
-        localStorage.removeItem('token');
-      }
-      navigate('/login');
-    });
-  }, [navigate]);
-
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+    localStorage.removeItem("token");
+    navigate("/login");
   };
-
-  if (loading) {
-    return (
-      <div className="h-screen w-screen flex bg-cover bg-center items-center justify-center" style={{ backgroundImage: `url(${bgImage})` }}>
-        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-8 text-white">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-300 mx-auto mb-4"></div>
-            <p className="text-lg">Loading...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen w-screen flex flex-col bg-cover bg-center" style={{ backgroundImage: `url(${bgImage})` }}>
+    <div
+      className="h-screen w-screen flex flex-col bg-cover bg-center"
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
       <div className="h-full flex items-center justify-center bg-black/40 backdrop-blur-sm">
         <div className="w-full max-w-2xl px-6 text-white">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 border border-white/20">
             <div className="flex justify-between items-center mb-8">
               <h1 className="text-[35px] font-bold text-white">
-                Welcome, {user?.name || user?.email}
+                Welcome to the Home Page
               </h1>
-              <button 
+              <button
                 onClick={handleLogout}
                 className="px-6 py-3 bg-purple-400/20 hover:bg-purple-300 hover:text-black text-white rounded border border-purple-300/30 transition duration-300"
               >
                 Logout
               </button>
             </div>
-            
             <div className="space-y-4">
               <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <h3 className="text-lg font-semibold text-purple-300 mb-2">User Information</h3>
-                <div className="space-y-2 text-white/90">
-                  <p><span className="text-purple-300">Email:</span> {user?.email}</p>
-                  <p><span className="text-purple-300">Provider:</span> {user?.provider || 'Local'}</p>
-                  {user?.name && <p><span className="text-purple-300">Name:</span> {user.name}</p>}
-                </div>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                <h3 className="text-lg font-semibold text-purple-300 mb-2">Dashboard</h3>
-                <p className="text-white/90">Your dashboard content will appear here.</p>
+                <p className="text-white">
+                  This is the home page of the application.
+                </p>
               </div>
             </div>
           </div>
