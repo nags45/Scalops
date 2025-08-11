@@ -2,11 +2,11 @@
   "name": "user-service",
   "version": "1.0.0",
   "description": "User microservice for Scalops project",
-  "main": "userService.js",
+  "main": "awsService.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node userService.js",
-    "dev": "nodemon userService.js",
+    "start": "node awsService.js",
+    "dev": "nodemon awsService.js",
     "lint": "eslint ."
   },
   "keywords": [],

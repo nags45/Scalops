@@ -39,7 +39,7 @@ router.post("/validate", async (req, res) => {
 });
 
 // Link accounts
-router.post("/link", async (req, res) => {
+router.post("/awsConnect", async (req, res) => {
   const { userId, accessKeyId, secretAccessKey } = req.body;
   try {
     const user = await User.findByPk(userId);
