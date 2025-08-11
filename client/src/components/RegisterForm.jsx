@@ -101,7 +101,7 @@ const RegisterForm = () => {
         name,
       });
       localStorage.setItem("token", response.data.token);
-      Navigate("/link"); // Redirect to link page
+      Navigate("/link"); // Always redirect to link page after registration
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         setServerError(error.response.data.error);

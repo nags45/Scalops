@@ -1,7 +1,7 @@
 {
-  "name": "server",
+  "name": "auth-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Authentication microservice for Scalops project",
   "main": "authService.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,7 +9,7 @@
     "dev": "nodemon authService.js",
     "lint": "eslint ."
   },
-  "keywords": [],
+  "keywords": ["auth", "oauth", "jwt", "microservice"],
   "author": "",
   "license": "ISC",
   "type": "commonjs",

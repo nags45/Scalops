@@ -64,7 +64,16 @@ const LoginForm = () => {
     try {
       const response = await axios.post("/api/auth/login", { email, password });
       localStorage.setItem("token", response.data.token);
-      navigate("/link"); // Redirect to link page after login
+      // After login, check for AWS credentials
+      const userId = response.data.user?.id;
+      const awsResponse = await axios.post("/api/user/awsConnect", { userId });
+      if (awsResponse.data && awsResponse.data.success) {
+        // AWS credentials exist and connection successful
+        navigate("/home");
+      } else {
+        // No credentials, or failed connection
+        navigate("/link");
+      }
     } catch (error) {
       if (error.response && error.response.data && error.response.data.error) {
         setServerError(error.response.data.error);
