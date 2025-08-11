@@ -115,7 +115,9 @@ const Home = () => {
                   </h3>
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-purple-300 font-medium">AWS Status:</span>
+                      <span className="text-purple-300 font-medium">
+                        AWS Status:
+                      </span>
                       <div className="flex items-center">
                         {user?.awsLinked ? (
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-500/20 text-green-300 border border-green-400/30">
@@ -130,27 +132,37 @@ const Home = () => {
                         )}
                       </div>
                     </div>
-                    
+
                     {user?.awsLinked && (
                       <div className="text-sm text-white/70 bg-white/5 rounded-lg p-3 border border-white/10">
                         <div className="flex items-center">
-                          <svg className="w-4 h-4 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          <svg
+                            className="w-4 h-4 text-green-400 mr-2"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clipRule="evenodd"
+                            />
                           </svg>
                           Your AWS account is connected and ready to use
                         </div>
                       </div>
                     )}
-                    
+
                     <button
                       onClick={handleLinkAWS}
                       className={`w-full px-4 py-3 rounded-lg border transition duration-300 ${
                         user?.awsLinked
-                          ? 'bg-purple-400/20 hover:bg-purple-300 hover:text-black text-white border-purple-300/30'
-                          : 'bg-purple-500 hover:bg-purple-600 text-white border-purple-500 shadow-lg hover:shadow-xl'
+                          ? "bg-purple-400/20 hover:bg-purple-300 hover:text-black text-white border-purple-300/30"
+                          : "bg-purple-500 hover:bg-purple-600 text-white border-purple-500 shadow-lg hover:shadow-xl"
                       }`}
                     >
-                      {user?.awsLinked ? 'Manage AWS Account' : 'Link AWS Account'}
+                      {user?.awsLinked
+                        ? "Manage AWS Account"
+                        : "Link AWS Account"}
                     </button>
                   </div>
                 </div>
