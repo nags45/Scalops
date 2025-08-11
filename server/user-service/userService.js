@@ -3,6 +3,7 @@ const cors = require("cors");
 const sequelize = require("./db/sequelize");
 const userController = require("./routes/userController");
 const userRoutes = require("./routes/userRoutes");
+const awsConnect = require("./routes/awsConnect");
 
 require("dotenv").config();
 
@@ -22,6 +23,8 @@ app.use(express.json());
 app.use("/api/user", userController);
 
 app.use("/api/user", userRoutes);
+
+app.use("/api", awsConnect);
 
 app.get("/api/user/health", (req, res) => {
   res.json({ status: "User service running" });

@@ -41,19 +41,6 @@ router.post("/validate", async (req, res) => {
 // Link accounts
 router.post("/link", async (req, res) => {
   const { userId, accessKeyId, secretAccessKey } = req.body;
-  // Validate AWS credentials are not empty
-  if (
-    !accessKeyId ||
-    !secretAccessKey ||
-    accessKeyId.trim() === "" ||
-    secretAccessKey.trim() === ""
-  ) {
-    return res
-      .status(400)
-      .json({
-        error: "AWS Access Key ID and Secret Access Key must not be empty.",
-      });
-  }
   try {
     const user = await User.findByPk(userId);
     if (!user) {
@@ -62,25 +49,8 @@ router.post("/link", async (req, res) => {
     user.accessKeyId = accessKeyId;
     user.secretAccessKey = secretAccessKey;
     await user.save();
-    const {
-      id,
-      email,
-      provider,
-      name,
-      googleId,
-      accessKeyId: keyId,
-      secretAccessKey: secretKey,
-    } = user;
     res.json({
-      user: {
-        id,
-        email,
-        provider,
-        name,
-        googleId,
-        accessKeyId: keyId,
-        secretAccessKey: secretKey,
-      },
+      success: true,
     });
   } catch (error) {
     console.error("Error linking account:", error);

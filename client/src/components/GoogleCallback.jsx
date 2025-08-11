@@ -10,7 +10,7 @@ const GoogleCallback = () => {
     const token = searchParams.get("token");
     if (token) {
       localStorage.setItem("token", token);
-      navigate("/link");
+      navigate("/home");
     } else {
       navigate("/login");
     }
