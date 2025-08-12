@@ -1,68 +1,19 @@
 import bgImage from "../assets/loginbackground.jpg";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useUser } from '../contexts/UserContext';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState();
+  const { user, logout } = useUser(); 
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
-    }
-
-    axios
-      .get("/api/auth", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(async () => {
-        try {
-          const profileRes = await axios.get("/api/user/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          setUser(profileRes.data.user || null);
-        } catch (profileErr) {
-          console.error("Error fetching profile:", profileErr);
-        } finally {
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error("Error authenticating token:", err);
-        if (err.response?.status === 401 || err.response?.status === 403) {
-          localStorage.removeItem("token");
-        }
-        navigate("/login");
-      });
-  }, [navigate]);
 
   const handleLinkAWS = () => {
     navigate("/link");
   };
-
-  if (loading) {
-    return (
-      <div
-        className="h-screen w-screen flex bg-cover bg-center items-center justify-center"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
-        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-8 text-white">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-300 mx-auto mb-4"></div>
-            <p className="text-lg">Loading...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div

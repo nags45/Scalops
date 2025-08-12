@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import bgImage from "../assets/loginbackground.jpg";
+import { useUser } from '../contexts/UserContext';
 
 const Link = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState();
+  const { user, setUser, logout } = useUser();
   const [accessKeyId, setAccessKeyId] = useState("");
   const [secretAccessKey, setSecretAccessKey] = useState("");
   const [error, setError] = useState("");
@@ -16,46 +16,15 @@ const Link = () => {
   const [isRelinking, setIsRelinking] = useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     navigate("/login");
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/login");
-      return;
+    if (user?.awsIdentity) {
+      setAWSIdentity(user.awsIdentity);
     }
-
-    axios
-      .get("/api/auth", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then(async () => {
-        try {
-          const profileRes = await axios.get("/api/user/profile", {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const profileUser = profileRes.data.user || null;
-          setUser(profileUser);
-          // Set awsIdentity from profile if available to prevent reset
-          if (profileUser?.awsIdentity) {
-            setAWSIdentity(profileUser.awsIdentity);
-          }
-        } catch (profileErr) {
-          console.error("Error fetching profile:", profileErr);
-        } finally {
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        console.error("Error authenticating token:", err);
-        if (err.response?.status === 401 || err.response?.status === 403) {
-          localStorage.removeItem("token");
-        }
-        navigate("/login");
-      });
-  }, [navigate]);
+  }, [user]);
 
   const handleLink = async (e) => {
     e.preventDefault();
@@ -96,14 +65,13 @@ const Link = () => {
       if (response.data.success) {
         setSuccess("AWS account linked successfully");
         setAWSIdentity(response.data.awsIdentity);
-        // Update user state to show as linked
-        setUser((prev) => ({
-          ...prev,
-          awsLinked: true,
-          maskedAccessKeyId: `${accessKeyId
-            .trim()
-            .slice(0, 4)}********${accessKeyId.trim().slice(-4)}`,
-        }));
+
+        const token = localStorage.getItem("token");
+        const profileRes = await axios.get("/api/user/profile", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setUser(profileRes.data.user);
         navigate("/link");
       } else {
         setError("Failed to link AWS account");
@@ -115,22 +83,6 @@ const Link = () => {
       setIsLinking(false);
     }
   };
-
-  if (loading) {
-    return (
-      <div
-        className="h-screen w-screen flex bg-cover bg-center items-center justify-center bg-no-repeat bg-fixed"
-        style={{ backgroundImage: `url(${bgImage})` }}
-      >
-        <div className="bg-black/40 backdrop-blur-sm rounded-lg p-8 text-white">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-300 mx-auto mb-4"></div>
-            <p className="text-lg">Loading...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div
