@@ -57,7 +57,7 @@ const Link = () => {
   const confirmLink = async () => {
     setIsLinking(true);
     try {
-      const response = await axios.post("/api/aws/awsConnect", {
+      const response = await awsService.connectAccount({
         userId: user.id,
         accessKeyId: accessKeyId.trim(),
         secretAccessKey: secretAccessKey.trim(),

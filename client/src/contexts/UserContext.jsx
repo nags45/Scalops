@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, useCallback } from 'react';
 
 const UserContext = createContext();
 
@@ -6,23 +6,22 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  const login = (userData) => {
+  const setUserMemo = useCallback((userData) => {
     setUser(userData);
-    setIsAuthenticated(true);
-  };
+    setIsAuthenticated(!!userData);
+  }, []);
   
-  const logout = () => {
+  const logout = useCallback(() => {
     setUser(null);
     setIsAuthenticated(false);
     localStorage.removeItem("token");
-  };
+  }, []);
   
   return (
     <UserContext.Provider value={{ 
       user, 
-      setUser, 
+      setUser: setUserMemo, 
       isAuthenticated, 
-      login, 
       logout 
     }}>
       {children}
